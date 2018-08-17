@@ -1,0 +1,29 @@
+version: '3'
+services:
+    web:
+        image: nginx:latest
+        ports:
+            - '80:80'
+        volumes:
+            - ./data/html:/var/www/html
+            - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - db
+            - app
+        restart: always
+    db:
+        image: mongo:latest
+        env_file: .env
+        volumes:
+            - ./mongodb/data/db:/data/db
+        ports:
+            - '27017:27017'
+        restart: always
+    app:
+        build: ./php
+        volumes:
+            - ./data/html:/var/www/html
+        ports:
+            - '9000:9000'
+        restart: always
+
